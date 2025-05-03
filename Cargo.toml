@@ -1,0 +1,32 @@
+[package]
+name = "rust-calculator"
+version = "0.1.0"
+edition = "2021"
+authors = ["Mieky Sofyan Yudinata <miki211287@gmail.com>"]
+description = "A Rust-based calculator with support for complex expressions and mathematical functions"
+license = "MIT"
+repository = "https://github.com/thickkoezz/rust-calculator"
+
+[dependencies]
+rustyline = "12.0.0"  # For improved CLI interface with history
+thiserror = "1.0.50"  # For better error handling
+anyhow = "1.0.79"     # For error propagation
+iced = { version = "0.9.0", features = ["canvas", "debug"] }  # GUI framework
+lazy_static = "1.4.0"  # For static initialization
+directories = "5.0.1"  # For cross-platform file storage locations
+
+[dev-dependencies]
+proptest = "1.4.0"    # For property-based testing
+criterion = "0.5.1"   # For benchmarking
+
+[[bench]]
+name = "calculator_benchmark"
+harness = false
+
+[[bin]]
+name = "rust-calculator-cli"
+path = "src/main.rs"
+
+[[bin]]
+name = "rust-calculator-gui"
+path = "src/gui.rs"

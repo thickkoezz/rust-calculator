@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create-release.outputs.upload_url }}
+    steps:
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+  build-release:
+    name: Build Release
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: rust-calculator-cli
+            asset_name: rust-calculator-cli-linux-amd64
+          - os: ubuntu-latest
+            artifact_name: rust-calculator-gui
+            asset_name: rust-calculator-gui-linux-amd64
+          - os: windows-latest
+            artifact_name: rust-calculator-cli.exe
+            asset_name: rust-calculator-cli-windows-amd64.exe
+          - os: windows-latest
+            artifact_name: rust-calculator-gui.exe
+            asset_name: rust-calculator-gui-windows-amd64.exe
+          - os: macos-latest
+            artifact_name: rust-calculator-cli
+            asset_name: rust-calculator-cli-macos-amd64
+          - os: macos-latest
+            artifact_name: rust-calculator-gui
+            asset_name: rust-calculator-gui-macos-amd64
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install latest stable
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./target/release/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          asset_content_type: application/octet-stream
