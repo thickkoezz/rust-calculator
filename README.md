@@ -7,6 +7,14 @@ A powerful calculator written in Rust with both command-line and desktop graphic
 ![Build Status](https://img.shields.io/github/workflow/status/thickkoezz/rust-calculator/Rust%20Calculator%20CI)
 ![Last Updated](https://img.shields.io/badge/last%20updated-May%202025-orange)
 
+## Screenshots
+
+### Desktop GUI Interface
+![Rust Calculator GUI](.doc/rust-calculator-gui.png)
+
+### Command Line Interface
+![Rust Calculator CLI](.doc/rust-calculator-cli.png)
+
 ## Features
 
 - **Basic Operations**: Addition, subtraction, multiplication, division, modulo, and exponentiation
